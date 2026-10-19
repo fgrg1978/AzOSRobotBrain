@@ -1,0 +1,13 @@
+openai>=1.0.0
+pyyaml>=6.0
+cryptography>=41.0      # OTA Ed25519 signature verification (fleet_ota.py)
+matplotlib>=3.7.0       # optional — SITL visualizer (viz.py)
+Pillow>=10.0.0          # optional — SITL camera rendering
+numpy>=1.24             # surround_view, star_tracker, SLAM
+scipy>=1.10             # optional — star_tracker detection
+opencv-python>=4.7      # optional — surround_view, motion_detect
+astropy>=5.3            # optional — star_tracker full precision (night flight)
+
+# dev-only
+hypothesis>=6.100       # property tests (tests/test_protocol_property.py)
+mypy>=1.10              # strict type checking (pyproject.toml [tool.mypy])

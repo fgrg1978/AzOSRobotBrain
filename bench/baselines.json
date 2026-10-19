@@ -1,0 +1,94 @@
+{
+  "_meta": {
+    "baseline_sha": "5e61db3c9fa7",
+    "baseline_date": "2026-05-28",
+    "harness_version": "1.0"
+  },
+  "meta": {
+    "sha": "5e61db3c9fa7",
+    "config_sha": "5e61db3c9fa7",
+    "defconfig": "qemu",
+    "qemu_version": "QEMU emulator version 11.0.0",
+    "host": "darwin-arm64",
+    "timestamp_utc": "2026-05-28T16:28:11Z",
+    "harness_version": "1.0",
+    "n_runs": 3
+  },
+  "rtt_ms": {
+    "p50": 102.532,
+    "p95": 103.87049999999999,
+    "p99": 103.99000000000001,
+    "stddev": 0.915,
+    "n_samples": 6
+  },
+  "throughput": {
+    "steady_msgs_per_s": 0.23,
+    "burst_peak_msgs_per_s": 401538.7
+  },
+  "boot_ms": 1045.1669692993164,
+  "wcet_us": {
+    "timer_isr": {
+      "min": 1051,
+      "max": 1051,
+      "avg": 1051,
+      "p99": 1051,
+      "violations": 0
+    }
+  },
+  "jitter_ns": {},
+  "bench_synth": {
+    "cap.get_verify":                 {"avg_cycles":     990, "max_cycles":     990},
+    "cap.grant_revoke":               {"avg_cycles":     420, "max_cycles":     420},
+    "cap.occupied":                   {"avg_cycles":    1200, "max_cycles":    1200},
+    "crypto.aes128_ctr_64B":          {"avg_cycles":    7200, "max_cycles":    7200},
+    "crypto.aes128_encrypt_block":    {"avg_cycles":    4500, "max_cycles":    4500},
+    "crypto.aes128_key_schedule":     {"avg_cycles":     720, "max_cycles":     720},
+    "crypto.sc_decrypt_64B":          {"avg_cycles":   18000, "max_cycles":   18000},
+    "crypto.sc_encrypt_64B":          {"avg_cycles":   20000, "max_cycles":   20000},
+    "crypto.sc_handshake":            {"avg_cycles": 1000000, "max_cycles": 1000000},
+    "crypto.sha256_1K":               {"avg_cycles":   17200, "max_cycles":   17200},
+    "crypto.sha256_64B":              {"avg_cycles":    9600, "max_cycles":    9600},
+    "crypto.x25519_scalarmult":       {"avg_cycles":  580000, "max_cycles":  580000},
+    "fs.tmpfs_read_64B":              {"avg_cycles":    1400, "max_cycles":    1400},
+    "fs.tmpfs_size":                  {"avg_cycles":     900, "max_cycles":     900},
+    "fs.tmpfs_write_64B":             {"avg_cycles":    3400, "max_cycles":    3400},
+    "ipc.channel_create_destroy":     {"avg_cycles":     700, "max_cycles":     700},
+    "ipc.channel_full_send":          {"avg_cycles":    1200, "max_cycles":    1200},
+    "ipc.channel_send_recv":          {"avg_cycles":    3400, "max_cycles":    3400},
+    "ipc.lease_active_count":         {"avg_cycles":     600, "max_cycles":     600},
+    "ipc.pipe_create_destroy":        {"avg_cycles":    1300, "max_cycles":    1300},
+    "ipc.pipe_write_read":            {"avg_cycles":     500, "max_cycles":     500},
+    "ipc.port_create_destroy":        {"avg_cycles":     900, "max_cycles":     900},
+    "ipc.port_poll_empty":            {"avg_cycles":     500, "max_cycles":     500},
+    "ipc.signal_pending":             {"avg_cycles":     300, "max_cycles":     300},
+    "ipc.signal_send":                {"avg_cycles":     700, "max_cycles":     700},
+    "mm.get_time":                    {"avg_cycles":     300, "max_cycles":     300},
+    "mm.kheap_free":                  {"avg_cycles":     560, "max_cycles":     560},
+    "mm.kheap_size":                  {"avg_cycles":     460, "max_cycles":     460},
+    "mm.kheap_used":                  {"avg_cycles":     420, "max_cycles":     420},
+    "mm.read_cycles":                 {"avg_cycles":     300, "max_cycles":     300},
+    "net.arp_insert":                 {"avg_cycles":    5200, "max_cycles":    5200},
+    "net.arp_lookup_hit":             {"avg_cycles":     700, "max_cycles":     700},
+    "net.arp_lookup_miss":            {"avg_cycles":     600, "max_cycles":     600},
+    "net.ethernet_build_64B":         {"avg_cycles":     830, "max_cycles":     830},
+    "net.ethernet_parse":             {"avg_cycles":     450, "max_cycles":     450},
+    "net.ip_build_header":            {"avg_cycles":     330, "max_cycles":     330},
+    "net.ip_checksum_1500B":          {"avg_cycles":    3500, "max_cycles":    3500},
+    "net.ip_checksum_20B":            {"avg_cycles":     220, "max_cycles":     220},
+    "net.ip_pseudo_checksum":         {"avg_cycles":     200, "max_cycles":     200},
+    "ota.crc32_256B":                 {"avg_cycles":    2100, "max_cycles":    2100},
+    "ota.parse_header":               {"avg_cycles":     930, "max_cycles":     930},
+    "protocol.build_packet_64B":      {"avg_cycles":     820, "max_cycles":     820},
+    "protocol.crc8_64B":              {"avg_cycles":     830, "max_cycles":     830},
+    "protocol.encode_sensor_packet":  {"avg_cycles":     580, "max_cycles":     580},
+    "protocol.parse_packet_64B":      {"avg_cycles":    2200, "max_cycles":    2200},
+    "sched.task_yield":               {"avg_cycles":    2200, "max_cycles":    2200}
+  },
+  "footprint": {
+    "text_bytes": 336822,
+    "rodata_bytes": 81208,
+    "data_bytes": 708236,
+    "bss_bytes": 2019608,
+    "total_bytes": 3145874
+  }
+}

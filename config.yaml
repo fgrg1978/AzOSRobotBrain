@@ -1,0 +1,264 @@
+robot:
+  type: wheeled                # wheeled | drone | humanoid | ackermann
+  listen_port: 9000
+  sensor_rate_hz: 20
+  camera_rate_hz: 2
+  # camera_port: 9001          # camera frames on their own connection (absent or 0: off)
+  watchdog_timeout_ms: 3000
+
+  wheeled:
+    wheel_base_mm: 142         # Yahboom chassis 310 motors
+    max_speed: 80              # % motor (0-100)
+    encoder_ticks_per_m: 1000
+    pid_enabled: true
+    pid_kp: 1.0
+    pid_ki: 0.1
+    pid_kd: 0.05
+
+  drone:
+    num_motors: 4
+    motor_layout: x            # x | +
+    hover_throttle: 1450       # PWM for hover
+    max_altitude_m: 50
+    max_tilt_deg: 35
+    pid:
+      roll:  [1.0, 0.01, 0.5]
+      pitch: [1.0, 0.01, 0.5]
+      yaw:   [0.5, 0.01, 0.2]
+      alt:   [2.0, 0.1,  1.0]
+
+  humanoid:
+    num_joints: 12
+    servo_bus: i2c             # i2c | serial | can
+    gait_style: walk
+
+lmstudio:
+  host: "127.0.0.1"
+  port: 1234
+  vlm_model: "smolvlm"
+  llm_model: "llama-3.2-3b"
+  timeout_s: 10
+
+safety:
+  # Per-type safety profiles (Phase AG)
+  wheeled:
+    min_battery_mv: 6500
+    max_tilt_cdeg: 4500          # 45 degrees
+    comms_timeout_s: 5.0
+    obstacle_stop_mm: 200
+    max_speed_pct: 80
+
+  drone:
+    min_battery_mv: 7000         # stricter than wheeled
+    max_tilt_cdeg: 3500          # 35 degrees
+    comms_timeout_s: 3.0         # shorter — drone must react fast
+    max_altitude_m: 50.0
+    min_satellites: 6
+    max_wind_ms: 10.0
+    low_battery_rtl_mv: 7000
+    critical_battery_land_mv: 6500
+
+  humanoid:
+    min_battery_mv: 6500
+    max_tilt_cdeg: 4500
+    comms_timeout_s: 5.0
+    max_joint_torque_pct: 70
+    fall_detect_threshold: 4000  # IMU accel mg
+
+  ackermann:
+    min_battery_mv: 6500
+    max_tilt_cdeg: 4500
+    comms_timeout_s: 5.0
+    obstacle_stop_mm: 200
+    max_speed_pct: 80
+    max_steer_cdeg: 3500         # 35 degrees max steering
+
+modes:
+  seguridad:
+    skills: [SCAN_360, WAIT]
+    loop: true
+    scan_interval_s: 30
+    detect: [person, open_door, fire, movement]
+    on_detect: [notify, alert]
+    schedule: always
+
+  patrulla:
+    skills: [NAVIGATE_TO, SCAN_360]
+    waypoints: [A, B, C]
+    loop: true
+    detect: [person, obstacle]
+    on_detect: [notify]
+
+  explorar:
+    planner: llm
+    loop: false
+
+  volver_base:
+    skills: [NAVIGATE_TO]
+    waypoints: [home]
+    loop: false
+
+  guardia:
+    skills: [PATROL_PERIMETER]
+    loop: true
+    detect: [person, open_door, fire, movement, vehicle]
+    on_detect: [notify, alert, buzzer_alert]
+    sensors: [pir, sound, ir]
+    schedule: always
+    scan_interval_s: 30
+
+  guardia_ausencia:
+    skills: [PATROL_PERIMETER]
+    loop: true
+    detect: [person, animal, vehicle, fire, smoke, open_door]
+    on_detect: [buzzer_alert, notify_telegram_photo, record_evidence, deterrent]
+    sensors: [pir, sound, ir]
+    schedule: always
+    track_intruder: true
+
+  guardia_presencia:
+    skills: [PATROL_PERIMETER]
+    loop: true
+    perimeter_only: true
+    detect: [person, vehicle]
+    on_detect: [notify_telegram_photo, record_evidence]
+    sensors: [pir]
+    schedule: always
+
+  guardia_nocturno:
+    skills: [PATROL_PERIMETER]
+    loop: true
+    detect: [person, animal, vehicle, fire]
+    on_detect: [buzzer_alert, notify_telegram_photo, record_evidence, deterrent]
+    sensors: [pir, sound, ir]
+    led_on_detect: true
+    patrol_speed_pct: 50
+    track_intruder: true
+
+  panico:
+    skills: [SCAN_360]
+    loop: true
+    detect: [person, animal, vehicle, fire, smoke, open_door]
+    on_detect: [buzzer_siren, notify_telegram_photo, record_evidence]
+    sensors: [pir, sound, ir]
+    continuous_buzzer: true
+    continuous_led: true
+
+  mapeo:
+    skills: [MAP_PERIMETER]
+    loop: false
+
+tasks:
+  default: "patrulla"
+
+locations:
+  home:
+    x_mm: 0
+    y_mm: 0
+  A:
+    x_mm: 0
+    y_mm: 0
+  B:
+    x_mm: 5000
+    y_mm: 0
+  C:
+    x_mm: 5000
+    y_mm: 3000
+
+notifications:
+  pushover:
+    enabled: false
+    user_key: ""
+    api_token: ""
+    priority: 1
+    sound: siren
+    attach_image: true
+
+  telegram:
+    enabled: false
+    bot_token: ""
+    chat_id: ""
+    commands: true
+
+  email:
+    enabled: false
+    smtp_host: smtp.gmail.com
+    smtp_port: 587
+    username: ""
+    password: ""
+    to: ""
+
+  webhook:
+    enabled: false
+    url: ""
+    headers: {}
+
+power:
+  patrol_speed_eco_pct: 25         # slower = less motor current
+  patrol_speed_alert_pct: 50       # normal speed in alert
+  lidar_hz_eco: 5                  # reduced scan rate
+  lidar_hz_alert: 10               # full scan rate
+  camera_warmup_ms: 200            # CSI re-init time
+  wifi_batch_interval_s: 2         # ESP32 batch send in ECO
+  alert_timeout_s: 120             # auto-return to ECO
+  alert_clear_count: 3             # VLM CLEAR count to de-escalate
+  led_eco_duty_pct: 10             # dim green in ECO
+  led_alert_duty_pct: 100          # full brightness in ALERT
+
+alert:
+  cooldown_s: 30                   # don't re-alert same sensor+label within this window
+  evidence_frames: 10              # frames to save per detection event
+  evidence_dir: "data/evidence"    # base directory for evidence storage
+  evidence_retention_days: 30      # cleanup old evidence after this many days
+  sensor_debounce_s: 1.0           # ignore repeat sensor triggers within this window
+  sensor_cooldown_s: 30.0          # per-sensor cooldown after alert
+
+slam:
+  map_resolution_mm: 50          # 5 cm per cell
+  map_size_cells: 1000           # 50 m × 50 m
+  lidar_scan_hz: 10
+  waypoint_interval_mm: 1000     # record waypoint every 1 m
+  loop_closure_threshold_mm: 500
+  path_plan_margin_cells: 2      # inflate obstacles for path planning
+  map_save_dir: "data"
+
+docks:
+  # Charging dock configuration
+  #- id: dock_main
+  #  waypoint: {x_mm: 0, y_mm: 0}
+  #  approach_heading_cdeg: 18000   # approach from behind (180°)
+
+battery:
+  low_mv: 6800                     # trigger return to dock
+  critical_mv: 6400                # emergency dock
+  full_mv: 8200                    # fully charged, resume patrol
+  check_interval_s: 10.0
+  samples_for_decision: 3          # consecutive low readings before action
+
+rtsp_cameras:
+  # Fixed surveillance cameras — brain monitors these 24/7
+  # Robot dispatched to investigate on confirmed detection
+  #- name: garden
+  #  url: "rtsp://192.168.1.100:554/stream1"
+  #  zone_waypoint: garden_center
+  #  scan_interval_s: 10
+  #  motion_threshold_pct: 15
+  #- name: entrance
+  #  url: "rtsp://192.168.1.101:554/stream1"
+  #  zone_waypoint: front_door
+  #  scan_interval_s: 5
+  #  motion_threshold_pct: 10
+  #- name: garaje
+  #  url: "rtsp://192.168.1.102:554/stream1"
+  #  zone_waypoint: zona_garaje
+  #  scan_interval_s: 10
+  #  motion_threshold_pct: 15
+  #- name: lateral
+  #  url: "rtsp://192.168.1.103:554/stream1"
+  #  zone_waypoint: lateral_oeste
+  #  scan_interval_s: 10
+  #  motion_threshold_pct: 15
+
+api:
+  enabled: true
+  port: 8080

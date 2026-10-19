@@ -1,0 +1,15 @@
+AzOSRobotBrain (the host-side companion of AzOS) is dual-licensed. You may use, copy, modify and distribute it under
+the terms of EITHER of these licenses, at your option:
+
+  - the Apache License, Version 2.0      (LICENSES/Apache-2.0.txt), or
+  - the GNU General Public License,
+    version 2 only                       (LICENSES/GPL-2.0-only.txt).
+
+SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-only
+
+Copyright 2026 Fernando Rodriguez
+
+Versions published before this file was changed were released under the
+MIT license, and remain available under it.
+
+Third-party components keep their own licenses; see NOTICE.

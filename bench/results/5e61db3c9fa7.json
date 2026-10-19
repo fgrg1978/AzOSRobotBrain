@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "sha": "5e61db3c9fa7",
+    "config_sha": "5e61db3c9fa7",
+    "defconfig": "qemu",
+    "qemu_version": "QEMU emulator version 11.0.0",
+    "host": "darwin-arm64",
+    "timestamp_utc": "2026-05-28T16:28:11Z",
+    "harness_version": "1.0",
+    "n_runs": 3
+  },
+  "rtt_ms": {
+    "p50": 102.532,
+    "p95": 103.87049999999999,
+    "p99": 103.99000000000001,
+    "stddev": 0.915,
+    "n_samples": 6
+  },
+  "throughput": {
+    "steady_msgs_per_s": 0.23,
+    "burst_peak_msgs_per_s": 401538.7
+  },
+  "boot_ms": 1045.1669692993164,
+  "wcet_us": {
+    "timer_isr": {
+      "min": 1051,
+      "max": 1051,
+      "avg": 1051,
+      "p99": 1051,
+      "violations": 0
+    }
+  },
+  "jitter_ns": {},
+  "footprint": {
+    "text_bytes": 336822,
+    "rodata_bytes": 81208,
+    "data_bytes": 708236,
+    "bss_bytes": 2019608,
+    "total_bytes": 3145874
+  }
+}

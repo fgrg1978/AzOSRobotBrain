@@ -1,0 +1,12 @@
+version = 1
+SPDX-PackageName = "AzOSRobotBrain"
+SPDX-PackageSupplier = "Fernando Rodriguez"
+
+# Every file in the repository, unless the file carries its own SPDX header
+# ("closest" lets an in-file header win). Covers documentation, configuration,
+# generated files, images and keys, which do not take a header.
+[[annotations]]
+path = "**"
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Fernando Rodriguez"
+SPDX-License-Identifier = "Apache-2.0 OR GPL-2.0-only"

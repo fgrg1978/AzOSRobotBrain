@@ -1,0 +1,12 @@
+# Narrow corridor — tests obstacle avoidance and wall-following
+name: corridor
+description: "3 m wide corridor with walls, tests FOLLOW_WALL and collision avoidance"
+width_mm: 10000
+height_mm: 3000
+start:
+  x_mm: 500
+  y_mm: 1500
+  hdg_deg: 0   # facing East (along corridor)
+obstacles:
+  # Central pillar blocking direct path
+  - {x: 4000, y: 1000, w: 500, h: 1000}

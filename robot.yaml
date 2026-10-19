@@ -1,0 +1,64 @@
+# Robot Hardware Description — Patrol Bot (Yahboom chassis)
+# Used by the brain to understand robot capabilities and sensor layout.
+
+name: patrol_bot_1
+type: wheeled
+
+chassis:
+  wheel_base_mm: 142          # Yahboom 310 motors
+  wheel_diameter_mm: 65
+  max_speed_pct: 80
+
+sensors:
+  - type: imu
+    model: mpu6050
+    bus: i2c
+    address: 0x68
+    rate_hz: 100
+
+  - type: rangefinder
+    model: hcsr04
+    gpio_trig: 5
+    gpio_echo: 6
+    position: front
+    max_range_mm: 4000
+
+  - type: rangefinder
+    model: hcsr04
+    gpio_trig: 7
+    gpio_echo: 8
+    position: right
+    max_range_mm: 4000
+
+  - type: camera
+    model: ov2640
+    interface: csi
+    resolution: [640, 480]
+    fps: 15
+
+  - type: pir
+    gpio: 12
+    position: front
+
+actuators:
+  - type: motor
+    model: dc_brushed
+    pwm_channel: 0
+    dir_gpio: 2
+    encoder_gpio: 3
+    side: left
+
+  - type: motor
+    model: dc_brushed
+    pwm_channel: 1
+    dir_gpio: 4
+    encoder_gpio: 7
+    side: right
+
+  - type: buzzer
+    gpio: 9
+
+  - type: led
+    model: ws2812
+    gpio: 10
+    count: 8

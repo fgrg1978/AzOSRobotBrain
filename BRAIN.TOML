@@ -1,0 +1,85 @@
+# BRAIN.TOML — AzOSRobotBrain manifest (RFC-0017 §"Brain-specific topology")
+#
+# This file declares the identity and kernel-cap expectations for the
+# generic AzOSRobotBrain instance.  At connect time the kernel (RFC-0011)
+# reads this manifest (via the cap-transfer extension) and
+# grants the listed caps to this brain process.
+#
+# Vocabulary: kind values map to RFC-0003 CapKind discriminants.
+#   "channel-pub"  — write access to a pubsub channel
+#   "channel-sub"  — read-subscribe access to a pubsub channel
+#   "service-call" — bidirectional RPC service endpoint
+#
+# Packet-type rationale (see protocol.py):
+#   Robot→Brain inbound:  SENSOR_PACKET(0x01), CAMERA_FRAME(0x02),
+#                         STATUS(0x03), OTA_ACK(0x04), SENSOR_COMPACT(0x05)
+#   Brain→Robot outbound: ACTUATOR_CMD(0x80), MODE_CMD(0x81),
+#                         WAYPOINT_CMD(0x82), CONFIG_CMD(0x83),
+#                         OTA_BEGIN(0x84), OTA_CHUNK(0x85), OTA_END(0x86),
+#                         PAYLOAD_CMD(0x87), ESTOP_CMD(0x88)
+
+[brain]
+# Logical name for this brain instance.  Override in deployment-specific
+# config.
+identity    = "azos-brain-generic"
+# Fleet group this brain belongs to.  "unassigned" until deployment sets it.
+fleet_id    = "unassigned"           # TODO: set per-deployment
+# Protocol version this brain implements (major.minor).
+protocol_version = "1.0"
+
+[required_caps]
+# Caps granted by the kernel after the Noise link handshake.
+# The kernel verifies that each cap is permitted in the robot's CAPS.TOML
+# (RFC-0005) before granting; a missing grant is a fatal connect error.
+caps = [
+    # --- Outbound: actuator / control commands ---
+    { kind = "channel-pub",  target = "/cmd/motor",    perm = "w" },  # ACTUATOR_CMD (0x80)
+    { kind = "channel-pub",  target = "/cmd/mode",     perm = "w" },  # MODE_CMD (0x81)
+    { kind = "channel-pub",  target = "/cmd/waypoint", perm = "w" },  # WAYPOINT_CMD (0x82)
+    { kind = "channel-pub",  target = "/cmd/config",   perm = "w" },  # CONFIG_CMD (0x83)
+    { kind = "channel-pub",  target = "/cmd/payload",  perm = "w" },  # PAYLOAD_CMD (0x87)
+
+    # --- Outbound: OTA delivery ---
+    { kind = "channel-pub",  target = "/ota/stream",   perm = "w" },  # OTA_BEGIN/CHUNK/END (0x84-0x86)
+
+    # --- Emergency stop (bidirectional: send cmd + confirm receipt) ---
+    { kind = "service-call", target = "robot.estop",   perm = "rw" }, # ESTOP_CMD (0x88)
+
+    # --- Inbound: sensor telemetry ---
+    { kind = "channel-sub",  target = "/sensors/imu",  perm = "r" },  # SENSOR_PACKET (0x01) — IMU/wheel odometry
+    { kind = "channel-sub",  target = "/sensors/gps",  perm = "r" },  # SENSOR_PACKET (0x01) — GPS fields
+    { kind = "channel-sub",  target = "/sensors/compact", perm = "r" }, # SENSOR_COMPACT (0x05) — LoRa/RF low-BW
+
+    # --- Inbound: camera / vision ---
+    { kind = "channel-sub",  target = "/perception/cam", perm = "r" }, # CAMERA_FRAME (0x02)
+
+    # --- Inbound: robot status + OTA acknowledgement ---
+    { kind = "channel-sub",  target = "/status",       perm = "r" },  # STATUS (0x03)
+    { kind = "channel-sub",  target = "/ota/ack",      perm = "r" },  # OTA_ACK (0x04)
+]
+
+[ml]
+# LM Studio (or compatible OpenAI-API server) endpoints for VLM + LLM.
+# Override in deployment-specific config.
+vlm_endpoint = "http://localhost:1234/v1"
+llm_endpoint = "http://localhost:1234/v1"
+# Default model names — override in deployment config or robot.yaml.
+vlm_model    = "internvl2-2b"
+llm_model    = "qwen2.5-1.5b-instruct"
+
+[fleet]
+# Broadcast address for fleet-level heartbeat/broadcast (fleet.py).
+# Override per deployment; default is local-subnet broadcast.
+broadcast_addr    = "10.0.0.255:9000"   # TODO: set per-deployment subnet
+heartbeat_period_s = 5
+
+[security]
+# Environment variable names that hold the shared secrets.
+# NEVER store secret values here — use env vars only.
+# AZOS_BRAIN_LINK_KEY: the 32-byte pre-shared key the brain↔kernel Noise
+#                      static keys derive from.
+# AZOS_BRAIN_API_KEY:  Bearer token for the HTTP REST API.
+# AZOS_BRAIN_NOISE_SK: optional brain static private key (Noise_IK); read from
+#                      the environment only, like the two above.
+link_key_env = "AZOS_BRAIN_LINK_KEY"
+api_key_env  = "AZOS_BRAIN_API_KEY"

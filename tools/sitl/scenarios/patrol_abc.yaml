@@ -1,0 +1,20 @@
+# Patrol A-B-C scenario — matches config.yaml waypoints
+name: patrol_abc
+description: "Room with 3 patrol waypoints A, B, C and scattered obstacles"
+width_mm: 6000
+height_mm: 4000
+start:
+  x_mm: 300
+  y_mm: 300
+  hdg_deg: 0
+# Waypoints match config.yaml locations (converted to mm)
+waypoints:
+  home: {x_mm: 0,    y_mm: 0}
+  A:    {x_mm: 0,    y_mm: 0}
+  B:    {x_mm: 5000, y_mm: 0}
+  C:    {x_mm: 5000, y_mm: 3000}
+obstacles:
+  # Furniture / walls
+  - {x: 1500, y: 500,  w: 300, h: 1200}   # bookshelf
+  - {x: 3000, y: 1500, w: 500, h: 300}    # table leg cluster
+  - {x: 4500, y: 800,  w: 400, h: 600}    # chair

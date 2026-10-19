@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robot Fleet Dashboard</title>
+<link rel="stylesheet" href="/dashboard/style.css">
+</head>
+<body>
+<header>
+  <h1>Robot Fleet Dashboard</h1>
+  <div class="status-bar">
+    <span id="connection-status" class="status-pill offline">Connecting...</span>
+    <span id="last-update">Last update: never</span>
+    <span id="robot-count">0 robots</span>
+  </div>
+</header>
+
+<main>
+  <section id="fleet-section">
+    <h2>Fleet</h2>
+    <table id="fleet-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Battery</th>
+          <th>Last Seen</th>
+          <th>Position (mm)</th>
+          <th>Mode</th>
+        </tr>
+      </thead>
+      <tbody id="fleet-tbody">
+        <tr><td colspan="8" class="empty-row">No robots registered</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="map-section">
+    <h2>Map</h2>
+    <canvas id="map-canvas" width="600" height="400"></canvas>
+    <div class="map-legend">
+      <span class="dot online"></span> Online
+      <span class="dot offline"></span> Offline
+      <span class="dot selected"></span> Selected
+    </div>
+  </section>
+
+  <section id="detail-section">
+    <h2>Details</h2>
+    <div id="detail-empty">Click a robot row to see details.</div>
+    <div id="detail-content" class="hidden">
+      <div class="detail-header">
+        <h3 id="detail-id">—</h3>
+        <button id="detail-close">Close</button>
+      </div>
+      <dl id="detail-fields"></dl>
+      <h4>Recent Events</h4>
+      <ul id="detail-events"><li class="empty-row">No events</li></ul>
+
+      <h4>Commands</h4>
+      <div class="command-panel">
+        <div class="command-group">
+          <label for="mode-select">Mode:</label>
+          <select id="mode-select">
+            <option value="idle">idle</option>
+            <option value="patrulla">patrulla</option>
+            <option value="guard">guard</option>
+            <option value="dock">dock</option>
+            <option value="offline">offline</option>
+          </select>
+          <button id="cmd-mode" class="btn">Set Mode</button>
+        </div>
+        <div class="command-group">
+          <button id="cmd-estop" class="btn danger">EMERGENCY STOP</button>
+        </div>
+        <div id="cmd-feedback" class="feedback"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <small>AzOS Robot Brain Dashboard (B02) — vanilla JS, polls /fleet/robots every 2s</small>
+</footer>
+
+<script src="/dashboard/app.js"></script>
+</body>
+</html>

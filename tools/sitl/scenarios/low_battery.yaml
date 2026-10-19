@@ -1,0 +1,12 @@
+# Low battery test — robot starts with near-critical battery
+# Used to verify the server's min_battery_mv safety cutoff
+name: low_battery
+description: "Robot starts at 6600 mV — should trigger safety stop before reaching 6500 mV"
+width_mm: 5000
+height_mm: 5000
+start:
+  x_mm: 2500
+  y_mm: 2500
+  hdg_deg: 0
+battery_mv_override: 6600   # SITL: start with low battery
+obstacles: []

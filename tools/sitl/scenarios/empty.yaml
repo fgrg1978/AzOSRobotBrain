@@ -1,0 +1,10 @@
+# Empty room — no obstacles, 10x10 m arena
+name: empty
+description: "Open arena, no obstacles"
+width_mm: 10000
+height_mm: 10000
+start:
+  x_mm: 1000
+  y_mm: 1000
+  hdg_deg: 0
+obstacles: []

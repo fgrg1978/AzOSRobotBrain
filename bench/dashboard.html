@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHANES bench dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+       background: #f5f5f5; color: #333; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+h1 { font-size: 1.6rem; margin-bottom: 4px; color: #1a1a2e; }
+.sub { font-size: 0.85rem; color: #666; margin-bottom: 24px; }
+h2 { font-size: 1.1rem; margin: 24px 0 10px; color: #1a1a2e;
+     border-bottom: 2px solid #ddd; padding-bottom: 4px; }
+h3 { font-size: 0.9rem; color: #555; margin: 12px 0 6px; }
+.metrics-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.metric-card { background: #fff; border-radius: 6px; padding: 10px 14px;
+               box-shadow: 0 1px 3px rgba(0,0,0,.1); min-width: 260px; }
+.metric-card .title { font-size: 0.78rem; color: #888; margin-bottom: 4px; }
+.metric-card .stats { font-size: 0.8rem; color: #555; margin-top: 4px; }
+.metric-card .stats span { margin-right: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.8rem;
+        background: #fff; border-radius: 6px; overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+th { background: #1a1a2e; color: #fff; padding: 6px 8px;
+     text-align: left; font-weight: 600; white-space: nowrap; }
+td { padding: 5px 8px; border-bottom: 1px solid #eee; white-space: nowrap; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f9f9f9; }
+.sha-link { font-family: monospace; font-size: 0.78rem; }
+.cell-good { background: #d4edda; color: #155724; }
+.cell-bad  { background: #f8d7da; color: #721c24; }
+.cell-neutral { }
+.no-data { color: #aaa; font-style: italic; font-size: 0.85rem; padding: 8px 0; }
+</style>
+</head>
+<body><div class="wrap">
+<h1>PHANES bench dashboard</h1>
+<p class="sub">Generated: 2026-05-28 16:37 UTC &nbsp;|&nbsp; 1 SHA indexed</p>
+<h2>RTT (ms)</h2>
+<div class="metrics-grid">
+<div class="metric-card">
+<div class="title">rtt_ms.n_samples</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 6</title></circle></svg>
+<div class="stats">
+<span>last: 6</span>
+<span>min: 6</span>
+<span>max: 6</span>
+<span>baseline: 6</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">rtt_ms.p50</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 102.532</title></circle></svg>
+<div class="stats">
+<span>last: 102.53</span>
+<span>min: 102.53</span>
+<span>max: 102.53</span>
+<span>baseline: 102.53</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">rtt_ms.p95</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 103.870</title></circle></svg>
+<div class="stats">
+<span>last: 103.87</span>
+<span>min: 103.87</span>
+<span>max: 103.87</span>
+<span>baseline: 103.87</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">rtt_ms.p99</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 103.990</title></circle></svg>
+<div class="stats">
+<span>last: 103.99</span>
+<span>min: 103.99</span>
+<span>max: 103.99</span>
+<span>baseline: 103.99</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">rtt_ms.stddev</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 0.915</title></circle></svg>
+<div class="stats">
+<span>last: 0.92</span>
+<span>min: 0.92</span>
+<span>max: 0.92</span>
+<span>baseline: 0.92</span>
+</div>
+</div>
+</div>
+<h2>Throughput</h2>
+<div class="metrics-grid">
+<div class="metric-card">
+<div class="title">throughput.burst_peak_msgs_per_s</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 401538.700</title></circle></svg>
+<div class="stats">
+<span>last: 401538.70</span>
+<span>min: 401538.70</span>
+<span>max: 401538.70</span>
+<span>baseline: 401538.70</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">throughput.steady_msgs_per_s</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 0.230</title></circle></svg>
+<div class="stats">
+<span>last: 0.23</span>
+<span>min: 0.23</span>
+<span>max: 0.23</span>
+<span>baseline: 0.23</span>
+</div>
+</div>
+</div>
+<h2>Boot time (ms)</h2>
+<div class="metrics-grid">
+<div class="metric-card">
+<div class="title">boot_ms</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 1045.167</title></circle></svg>
+<div class="stats">
+<span>last: 1045.17</span>
+<span>min: 1045.17</span>
+<span>max: 1045.17</span>
+<span>baseline: 1045.17</span>
+</div>
+</div>
+</div>
+<h2>WCET (µs)</h2>
+<div class="metrics-grid">
+<div class="metric-card">
+<div class="title">wcet_us.timer_isr.avg</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 1051</title></circle></svg>
+<div class="stats">
+<span>last: 1051</span>
+<span>min: 1051</span>
+<span>max: 1051</span>
+<span>baseline: 1051</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">wcet_us.timer_isr.max</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 1051</title></circle></svg>
+<div class="stats">
+<span>last: 1051</span>
+<span>min: 1051</span>
+<span>max: 1051</span>
+<span>baseline: 1051</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">wcet_us.timer_isr.min</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 1051</title></circle></svg>
+<div class="stats">
+<span>last: 1051</span>
+<span>min: 1051</span>
+<span>max: 1051</span>
+<span>baseline: 1051</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">wcet_us.timer_isr.p99</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 1051</title></circle></svg>
+<div class="stats">
+<span>last: 1051</span>
+<span>min: 1051</span>
+<span>max: 1051</span>
+<span>baseline: 1051</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">wcet_us.timer_isr.violations</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 0</title></circle></svg>
+<div class="stats">
+<span>last: 0</span>
+<span>min: 0</span>
+<span>max: 0</span>
+<span>baseline: 0</span>
+</div>
+</div>
+</div>
+<h2>Jitter (ns)</h2>
+<div class="metrics-grid">
+<p class="no-data">No data collected yet.</p>
+</div>
+<h2>Footprint (bytes)</h2>
+<div class="metrics-grid">
+<div class="metric-card">
+<div class="title">footprint.bss_bytes</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 2019608</title></circle></svg>
+<div class="stats">
+<span>last: 2019608</span>
+<span>min: 2019608</span>
+<span>max: 2019608</span>
+<span>baseline: 2019608</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">footprint.data_bytes</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 708236</title></circle></svg>
+<div class="stats">
+<span>last: 708236</span>
+<span>min: 708236</span>
+<span>max: 708236</span>
+<span>baseline: 708236</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">footprint.rodata_bytes</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 81208</title></circle></svg>
+<div class="stats">
+<span>last: 81208</span>
+<span>min: 81208</span>
+<span>max: 81208</span>
+<span>baseline: 81208</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">footprint.text_bytes</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 336822</title></circle></svg>
+<div class="stats">
+<span>last: 336822</span>
+<span>min: 336822</span>
+<span>max: 336822</span>
+<span>baseline: 336822</span>
+</div>
+</div>
+<div class="metric-card">
+<div class="title">footprint.total_bytes</div>
+<svg width="200" height="40" xmlns="http://www.w3.org/2000/svg" style="background:#f8f8f8;border-radius:3px;overflow:visible"><line x1="4" y1="20.0" x2="196" y2="20.0" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/><circle cx="100.0" cy="20.0" r="3.5" fill="#4a90d9"><title>5e61db3c: 3145874</title></circle></svg>
+<div class="stats">
+<span>last: 3145874</span>
+<span>min: 3145874</span>
+<span>max: 3145874</span>
+<span>baseline: 3145874</span>
+</div>
+</div>
+</div>
+<h2>Recent runs (last 10)</h2>
+<table>
+<thead><tr>
+<th>SHA</th><th>Timestamp</th><th>Config</th>
+<th>boot_ms</th>
+<th>rtt_ms.p99</th>
+<th>throughput.burst_peak_msgs_per_s</th>
+<th>wcet_us.timer_isr.max</th>
+<th>footprint.total_bytes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a class="sha-link" href="https://github.com/fgrg1978/AzOS/commit/5e61db3c9fa7" target="_blank">5e61db3c9fa7</a></td>
+<td>2026-05-28T16:28:11Z</td>
+<td>qemu</td>
+<td class="cell-neutral">1045.17</td>
+<td class="cell-neutral">103.99</td>
+<td class="cell-neutral">401538.70</td>
+<td class="cell-neutral">1051</td>
+<td class="cell-neutral">3145874</td>
+</tr>
+</tbody></table>
+</div></body></html>

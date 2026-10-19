@@ -1,0 +1,30 @@
+[tool.mypy]
+# Strict mode for the protocol, link-security and API modules.
+# Scope is intentionally limited to the three protocol/API modules —
+# not the whole codebase, which includes optional ML/vision deps that
+# have no stubs and would generate hundreds of false-positive errors.
+strict = true
+python_version = "3.12"
+files = ["protocol.py", "secure_channel.py", "api.py", "camera_link.py"]
+
+# Relax for third-party libraries that ship no type stubs.
+# Keeping this explicit so we know exactly which import sites are untyped.
+[[tool.mypy.overrides]]
+module = [
+    "PIL.*",
+    "cv2.*",
+    "openai.*",
+    "numpy.*",
+    "scipy.*",
+    "astropy.*",
+    "matplotlib.*",
+    "yaml.*",
+    "cryptography.*",
+]
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
