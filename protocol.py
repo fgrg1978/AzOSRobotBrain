@@ -76,6 +76,10 @@ ESTOP_CMD = 0x88  # remote emergency stop
 PREDICT_CMD = 0x89  # RFC-0034: predicted next actuator command + confidence
 DEGRADE_CMD = 0x8A  # RFC-0036: brain-triggered degraded mode (capability containment)
 SEMANTIC_LEVEL_CMD = 0x8B  # RFC-0037: graded degrade-level index (0=FULL…3=CONTAINED)
+# 0x8C is reserved: the AzOS behaviour engine's link-state report to its kernel
+# (PKT_LINK_STATE), never on the wire. The robot drops it if it arrives; do not
+# allocate it to a new command.
+RESERVED_KERNEL_INTERNAL_CMD = 0x8C
 
 # Robot types
 ROBOT_WHEELED = 0
