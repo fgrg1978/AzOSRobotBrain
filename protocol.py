@@ -33,7 +33,7 @@ import weakref
 from dataclasses import dataclass, field
 from typing import Optional, Union, TYPE_CHECKING
 
-MAGIC = b"\x42\x52"  # "BR"
+MAGIC = b"\x43\x4c"  # "CL"
 
 # Packet types — Robot -> Server
 SENSOR_PACKET = 0x01

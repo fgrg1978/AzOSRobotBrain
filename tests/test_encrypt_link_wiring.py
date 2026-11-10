@@ -30,7 +30,7 @@ if not getattr(sc, "_HAS_CRYPTOGRAPHY", False):
 from secure_channel import LinkViolation, SecureChannel, public_key  # noqa: E402
 from tests.mock_kernel import HEXKEY, PSK, MockRobot, arm_brain, reset_protocol_state  # noqa: E402
 
-BRAIN_SK = bytes([0x77]) * 32
+COMPANION_SK = bytes([0x77]) * 32
 
 
 @pytest.fixture(autouse=True)
@@ -131,9 +131,9 @@ def test_handshake_and_encrypted_roundtrip_xx(monkeypatch):
 
 
 def test_handshake_and_roundtrip_ik_with_the_pinned_key(monkeypatch):
-    monkeypatch.setenv("AZOS_BRAIN_NOISE_SK", BRAIN_SK.hex())
+    monkeypatch.setenv("AZOS_BRAIN_NOISE_SK", COMPANION_SK.hex())
     arm_brain(monkeypatch)
-    assert protocol._noise_static == BRAIN_SK
+    assert protocol._noise_static == COMPANION_SK
 
     async def after(reader, writer, ok):
         assert ok
@@ -141,9 +141,9 @@ def test_handshake_and_roundtrip_ik_with_the_pinned_key(monkeypatch):
 
     async def run():
         async with _Rig(after) as rig:
-            robot = rig.robot(pinned=public_key(BRAIN_SK))
+            robot = rig.robot(pinned=public_key(COMPANION_SK))
             sc_ = await robot.handshake()
-            assert sc_.remote_static == public_key(BRAIN_SK)
+            assert sc_.remote_static == public_key(COMPANION_SK)
             await robot.send_packet(0x01, b"ik")
             await rig.wait()
             return rig.result
@@ -157,7 +157,7 @@ def test_an_ik_robot_with_a_brain_that_has_no_static_key_is_refused(monkeypatch)
 
     async def run():
         async with _Rig() as rig:
-            robot = rig.robot(pinned=public_key(BRAIN_SK))
+            robot = rig.robot(pinned=public_key(COMPANION_SK))
             with pytest.raises((asyncio.IncompleteReadError, ConnectionError, LinkViolation)):
                 await robot.handshake()
             await rig.wait()
@@ -167,7 +167,7 @@ def test_an_ik_robot_with_a_brain_that_has_no_static_key_is_refused(monkeypatch)
 
 
 def test_an_ik_robot_that_pinned_another_key_is_refused(monkeypatch):
-    monkeypatch.setenv("AZOS_BRAIN_NOISE_SK", BRAIN_SK.hex())
+    monkeypatch.setenv("AZOS_BRAIN_NOISE_SK", COMPANION_SK.hex())
     arm_brain(monkeypatch)
 
     async def run():

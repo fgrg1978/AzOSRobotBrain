@@ -17,7 +17,7 @@ Accepts kernel connections on a configurable port.  For each new connection:
      ``crates/behavior/src/brain_protocol.rs``). An earlier version wrote raw
      ``json.dumps(...)`` bytes here with no framing at all; see
      ``test_data_plane_main.py`` for why that was harmless (the kernel's
-     resync scan never finds "BR" in it and the connection is already
+     resync scan never finds "CL" in it and the connection is already
      closing) but still worth removing — it had zero consumers on either
      side and violated the "one wire format" invariant documented in
      ``protocol.py``.
@@ -191,7 +191,7 @@ class DataPlaneServer:
                 # framing at all — see the module docstring and
                 # test_data_plane_main.py::test_ownership_rejection_writes_nothing_to_the_wire
                 # for why that was reachable by a real kernel's connection but
-                # harmless (the kernel's resync scan never finds "BR" in it,
+                # harmless (the kernel's resync scan never finds "CL" in it,
                 # and this `finally` closes the socket before any subsequent
                 # frame could be misparsed). Close is still the right way to
                 # signal "not for you" absent a defined error packet.

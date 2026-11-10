@@ -190,7 +190,7 @@ def test_robot_id_from_peer_is_a_valid_control_plane_route_segment() -> None:
 #   2. It could not desynchronise that link. `../AzOS`'s
 #      `kernel/src/main.rs` TCP receive loop (~line 5716-5730) resyncs a
 #      failed `parse_packet` by scanning forward for the next `MAGIC` pair
-#      ("BR") and, finding none, simply `break`s — discarding the rest of
+#      ("CL") and, finding none, simply `break`s — discarding the rest of
 #      that `recv()`'s buffer. `raw_buf`/`recv_buf` are declared fresh
 #      inside the per-tick loop body (~line 5626-5629), so no partial-frame
 #      state survives across `recv()` calls or a reconnect for a later
@@ -318,15 +318,15 @@ def test_old_reject_body_could_not_have_been_mistaken_for_a_frame() -> None:
 
     `kernel/src/main.rs`'s receive loop treats a failed `parse_packet` as
     "scan forward for the next MAGIC pair"; it can only be misled by bytes
-    that happen to contain "BR" (0x42 0x52). The old reject body was
+    that happen to contain "CL" (0x43 0x4c). The old reject body was
     `json.dumps({"error": "not_owner", "robot_id": f"{ip}_{port}"})` —
     lowercase JSON keys/values plus IPv4 digits and underscores, never the
-    two-byte sequence "BR". This test would fail (flagging a genuine
+    two-byte sequence "CL". This test would fail (flagging a genuine
     resync-desync bug) if a future robot_id format ever introduced one.
     """
     for robot_id in ("10.0.0.5_54321", "127.0.0.1_1", "203.0.113.9_65535"):
         body = json.dumps({"error": "not_owner", "robot_id": robot_id}).encode()
-        assert b"BR" not in body, (
+        assert b"CL" not in body, (
             f"reject body for robot_id={robot_id!r} contains the frame MAGIC "
             "— it could desynchronise a kernel's resync scan"
         )

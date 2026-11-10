@@ -54,7 +54,7 @@ from secure_channel import (
     PATTERN_IK,
     PATTERN_XX,
     SecureChannel,
-    brain_static_key,
+    companion_static_key,
     kernel_static_key,
     public_key,
 )
@@ -62,44 +62,44 @@ from secure_channel import (
 pytest.importorskip("cryptography")
 
 _PSK = bytes(range(32))
-_BRAIN_IK_SK = bytes([0x77]) * 32
+_COMPANION_IK_SK = bytes([0x77]) * 32
 _E_ROBOT = bytes([0x33]) * 32
-_E_BRAIN = bytes([0x44]) * 32
+_E_COMPANION = bytes([0x44]) * 32
 
-KERNEL_SK = "9f1fcde4e89ea1e2a099cfef639daab5e6cbce97d016e6cc1a0a1898c423f774"
-KERNEL_PK = "ed8af765db3e506ce9993ceb2cb824c2d1640b5531d8bb3dd19700a5243b271d"
-BRAIN_SK = "ac9b2eb32bf8bb4e742800c7d14826bedcddabdc85a489981a12e501dfa94d7d"
-BRAIN_PK = "b36a27f7b9be42fc6c11307347556eb1a34e81095684b6df11af3781382b1434"
-IK_BRAIN_PK = "1cf579aba45a10ba1d1ef06d91fca2aa9ed0a1150515653155405d0b18cb9a67"
-IK_MSG1 = "4900607b0d47d93427f8311160781c7c733fd89f88970aef490d8aa0ee19a4cb8a1b140f31ce1e7b91df672735b75efa7d1eb743576872dc47b54ab044e26204667554f5208f24537e08182160bf762ed828cffd85fb0ec9fbe0da4b4d0fb42acd6f26"
-IK_MSG2 = "0030ff2ee45601ec1b67310c7790404585ae697331eee1c1f8cf2419731c1fff3e6b1346dc7690404d34f646d6a09752a7fd"
-IK_SID = "4dc0b2a9167f8b13bec0936fd40a3179"
-IK_ROBOT_F1 = "001b57e276ed408c8d0521e7132db429421eb654291aa56c19b3ce72d6"
-IK_ROBOT_F2 = "001e2070952fc43a92b28242947a8af5023c287e63277a329ca8a2faf6d47500"
-IK_BRAIN_F1 = "001b25b2d87f1d737f45a590b176ed6a807f8307713130335a82865f7b"
-IK_ROBOT_F3_REKEY = "0010955a5c3aac132c8b360ed7c56203cb61001b2a45bd172f6ff7b1188fb23992a8bca8125d00ae3041ca1bfa6af6"
+KERNEL_SK = "643f6528a41c08ed852887ac9850e038f53d1113ac9707e40893e84ccd394e4d"
+KERNEL_PK = "aa298a9c586a2921e75483133b38dd6390dd3fd3b1bd4fc9ba3c2ac2268bf829"
+COMPANION_SK = "82670636ca1fba4a7feb4b89465f4f27c26bce91ea46942a5c82499e749f6a63"
+COMPANION_PK = "d6995f16c63717b376d773ac5a51cd7c38f46b3d3fa909f9bb5c546c7e2e414c"
+IK_COMPANION_PK = "1cf579aba45a10ba1d1ef06d91fca2aa9ed0a1150515653155405d0b18cb9a67"
+IK_MSG1 = "4900607b0d47d93427f8311160781c7c733fd89f88970aef490d8aa0ee19a4cb8a1b144892b3e7f8c5a62a29f808a6edfde71602ee5cf45c2241bedbefc80506d6aa6000589f13012a60847952d69aa120e7e3c90a78442d1915c2dcfab3b7b0cecac5"
+IK_MSG2 = "0030ff2ee45601ec1b67310c7790404585ae697331eee1c1f8cf2419731c1fff3e6b6b7d698300ea2a26b03bd45f08ed6086"
+IK_SID = "43d9cd7b6eb420867e9b02feff5004f7"
+IK_ROBOT_F1 = "001f8aef13475e8782c32d6e965341ebd30102000fcd204ab34995cf275913c50b"
+IK_ROBOT_F2 = "001ed287a3c3406d0a64379d5eccc3dfbbdb6771f6e9e6d38614f61c40c2e312"
+IK_COMPANION_F1 = "001b5ff0f60776835b31aa37839c20fe8a1ac6b8b3be7e2f1338e83b34"
+IK_ROBOT_F3_REKEY = "00100b687cf52d83fc4ad02fcde014c0604c001bdcc0f9ac67108544ed84ccd1d6ba839fdfdf069f267d1022f1f579"
 XX_MSG1 = "5800207b0d47d93427f8311160781c7c733fd89f88970aef490d8aa0ee19a4cb8a1b14"
-XX_MSG2 = "0060ff2ee45601ec1b67310c7790404585ae697331eee1c1f8cf2419731c1fff3e6b406dfee9ebefd84127fadf3bdc15ad1f16be32cfa431ebeff801e358e531010a4f77fce2a2489b29f805adb69afd37198e8d917e40a8c3e1e3513f6682243dfd"
-XX_MSG3 = "0040bf490b653f124ebe7b2c2f514e4c107e92839895c8e19bd66328b57810d84cb76e8c50871e943be1cb3246bde1040012af44047aa7c60f52998553d4ffa162e1"
-XX_SID = "70742d52f1efae547de5ed473d7dd0c2"
-XX_ROBOT_F1 = "001b0f817fca54e339881ea8c89296fd3791fbab2eb2d101c1469eb738"
-XX_BRAIN_F1 = "001bfdb82326098580d5bfabe8205bf997936778601eb86cb104ca7b3f"
+XX_MSG2 = "0060ff2ee45601ec1b67310c7790404585ae697331eee1c1f8cf2419731c1fff3e6b259e860894668d0e3d3c9ce4c1110ed28d04d8fbcd1c54c952f280b5a3345472bd2db6890e0a64309529f69592acf1cbf7b4195e3209df7367a4ed5b07aa8c37"
+XX_MSG3 = "0040f44a2f86837444c4647ff126d3f12947590266050bb91038870231a5223382dda918a831a444763e1459bb0f5d1ba4df1de0ad6086bcb9cb0de76fd64066f649"
+XX_SID = "cb36de988b0b7142f33db7bd71a43216"
+XX_ROBOT_F1 = "001fd232c3c13f6515d4b79fe47889e1c49b6c86cdb39630bbcbb43695f856944a"
+XX_COMPANION_F1 = "001bfab8f4de9123e06da7972aed85ce9cbb956627fa78fec7d0dd7fe9"
 
 
 def test_derived_static_keys_match_rust() -> None:
     assert kernel_static_key(_PSK).hex() == KERNEL_SK
     assert public_key(kernel_static_key(_PSK)).hex() == KERNEL_PK
-    assert brain_static_key(_PSK).hex() == BRAIN_SK
-    assert public_key(brain_static_key(_PSK)).hex() == BRAIN_PK
-    assert public_key(_BRAIN_IK_SK).hex() == IK_BRAIN_PK
+    assert companion_static_key(_PSK).hex() == COMPANION_SK
+    assert public_key(companion_static_key(_PSK)).hex() == COMPANION_PK
+    assert public_key(_COMPANION_IK_SK).hex() == IK_COMPANION_PK
 
 
 def _run(pinned: bool):
     robot = SecureChannel(
-        _PSK, True, remote_pinned=public_key(_BRAIN_IK_SK) if pinned else None, _testing_eph_priv=_E_ROBOT
+        _PSK, True, remote_pinned=public_key(_COMPANION_IK_SK) if pinned else None, _testing_eph_priv=_E_ROBOT
     )
     brain = SecureChannel(
-        _PSK, False, static_key=_BRAIN_IK_SK if pinned else None, _testing_eph_priv=_E_BRAIN
+        _PSK, False, static_key=_COMPANION_IK_SK if pinned else None, _testing_eph_priv=_E_COMPANION
     )
     wire = [robot.start_handshake()]
     brain.begin(wire[0][0])
@@ -120,9 +120,9 @@ def test_ik_handshake_and_transport_match_rust() -> None:
     assert [w.hex() for w in wire] == [IK_MSG1, IK_MSG2]
     assert robot.session_id is not None and robot.session_id.hex() == IK_SID
     assert brain.session_id == robot.session_id
-    assert robot.seal_message(b"hello brain").hex() == IK_ROBOT_F1
+    assert robot.seal_message(b"hello companion").hex() == IK_ROBOT_F1
     assert robot.seal_message(b"second message").hex() == IK_ROBOT_F2
-    assert brain.seal_message(b"hello robot").hex() == IK_BRAIN_F1
+    assert brain.seal_message(b"hello robot").hex() == IK_COMPANION_F1
     robot.request_rekey()
     assert robot.seal_message(b"after rekey").hex() == IK_ROBOT_F3_REKEY
 
@@ -131,17 +131,17 @@ def test_xx_handshake_and_transport_match_rust() -> None:
     robot, brain, wire = _run(False)
     assert [w.hex() for w in wire] == [XX_MSG1, XX_MSG2, XX_MSG3]
     assert robot.session_id is not None and robot.session_id.hex() == XX_SID
-    assert robot.seal_message(b"hello brain").hex() == XX_ROBOT_F1
-    assert brain.seal_message(b"hello robot").hex() == XX_BRAIN_F1
+    assert robot.seal_message(b"hello companion").hex() == XX_ROBOT_F1
+    assert brain.seal_message(b"hello robot").hex() == XX_COMPANION_F1
 
 
 def test_the_rust_frames_open_here() -> None:
     robot, brain, _ = _run(True)
     # Frames the Rust code sealed (robot -> brain, in order) open in this
     # implementation, which proves the keys and nonces, not just the bytes.
-    assert brain.open_frame(bytes.fromhex(IK_ROBOT_F1)) == (SecureChannel.RECORD_DATA, b"hello brain")
+    assert brain.open_frame(bytes.fromhex(IK_ROBOT_F1)) == (SecureChannel.RECORD_DATA, b"hello companion")
     assert brain.open_frame(bytes.fromhex(IK_ROBOT_F2)) == (SecureChannel.RECORD_DATA, b"second message")
-    assert robot.open_frame(bytes.fromhex(IK_BRAIN_F1)) == (SecureChannel.RECORD_DATA, b"hello robot")
+    assert robot.open_frame(bytes.fromhex(IK_COMPANION_F1)) == (SecureChannel.RECORD_DATA, b"hello robot")
     assert brain.open_message(bytes.fromhex(IK_ROBOT_F3_REKEY)) == b"after rekey"
     assert brain.rx_generation == 1
 

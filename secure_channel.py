@@ -75,7 +75,7 @@ def load_link_key() -> Optional[bytes]:
 #
 # Keys. The 32-byte link key is never used as a curve scalar; static keys derive
 # from it (HKDF-SHA256, salt STATIC_SALT, one info string per side).
-#   * brain static key pinned in the robot's signed topology (`[peer.brain]`,
+#   * companion static key pinned in the robot's signed topology (`[peer.companion]`,
 #     `noise_pk`): Noise_IK. The brain's static private key is AZOS_BRAIN_NOISE_SK; the
 #     robot's static (message 1) must be the key the link key derives.
 #   * nothing pinned: Noise_XX with both statics derived from the link key; the
@@ -89,7 +89,7 @@ def load_link_key() -> Optional[bytes]:
 #   XX   1 robot -> brain  e                2 brain -> robot  e, ee, s, es
 #        3 robot -> brain  s, se
 #   transport frame  [length u16 BE][ChaCha20-Poly1305 ciphertext || tag]
-# Handshake payloads are empty; the prologue is b"azos-brain-link-v1" + the
+# Handshake payloads are empty; the prologue is b"azos-companion-link-v2" + the
 # pattern byte. A transport frame's AD is its two length bytes, its nonce the
 # CipherState counter (the wire carries none: TCP is in order). Any violation
 # is terminal and closes the connection; there is no REJECT. An empty
@@ -112,10 +112,11 @@ except ImportError:  # pragma: no cover — only hit if requirements not install
 PSK_BYTES = KEY_BYTES
 PATTERN_IK = 0x49  # 'I'
 PATTERN_XX = 0x58  # 'X'
-PROLOGUE_LABEL = b"azos-brain-link-v1"
-STATIC_SALT = b"azos-brain-link-v1 static"
-KERNEL_STATIC_INFO = b"azos brain-link kernel static v1"
-BRAIN_STATIC_INFO = b"azos brain-link brain static v1"
+LINK_VERSION = 2
+PROLOGUE_LABEL = b"azos-companion-link-v2"
+STATIC_SALT = b"azos-companion-link-v2 static"
+KERNEL_STATIC_INFO = b"azos companion-link kernel static v2"
+COMPANION_STATIC_INFO = b"azos companion-link companion static v2"
 
 DH_LEN = 32
 HASH_LEN = 32
@@ -209,9 +210,9 @@ def kernel_static_key(psk: bytes) -> bytes:
     return hkdf(STATIC_SALT, psk, KERNEL_STATIC_INFO)
 
 
-def brain_static_key(psk: bytes) -> bytes:
-    """The brain's derived static private key (the XX identity)."""
-    return hkdf(STATIC_SALT, psk, BRAIN_STATIC_INFO)
+def companion_static_key(psk: bytes) -> bytes:
+    """The companion's derived static private key (the XX identity)."""
+    return hkdf(STATIC_SALT, psk, COMPANION_STATIC_INFO)
 
 
 def load_noise_static() -> "bytes | None":
@@ -560,7 +561,7 @@ class SecureChannel:
         else:
             self._pattern = PATTERN_XX
             rs = None
-            self._expect_remote = public_key(brain_static_key(self._psk))
+            self._expect_remote = public_key(companion_static_key(self._psk))
         self._hs = HandshakeState(self._pattern, True, sk, rs, _prologue(self._pattern))
 
     def begin(self, pattern_byte: int) -> None:
@@ -575,7 +576,7 @@ class SecureChannel:
                 raise LinkViolation("Noise_IK announced but no AZOS_BRAIN_NOISE_SK is set")
             sk = self._static_key
         elif pattern_byte == PATTERN_XX:
-            sk = brain_static_key(self._psk)
+            sk = companion_static_key(self._psk)
         else:
             self._fail()
             raise LinkViolation(f"unknown handshake pattern byte {pattern_byte:#x}")
@@ -599,7 +600,7 @@ class SecureChannel:
             return _frame(self._hs.write_message(self._eph()))
         except NoiseError as e:
             self._fail()
-            raise LinkViolation(f"handshake: {e}") from e
+            raise LinkViolation(f"handshake: {e} (link v{LINK_VERSION} expected)") from e
 
     def handle_handshake(self, frame: bytes) -> "bytes | None":
         """Process the peer's handshake frame (prefix included); returns the
@@ -625,7 +626,7 @@ class SecureChannel:
             return out
         except NoiseError as e:
             self._fail()
-            raise LinkViolation(f"handshake: {e}") from e
+            raise LinkViolation(f"handshake: {e} (link v{LINK_VERSION} expected)") from e
 
     def _establish(self) -> None:
         assert self._hs is not None

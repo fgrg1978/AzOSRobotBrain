@@ -14,7 +14,7 @@ from __future__ import annotations
 import pytest
 
 from secure_channel import (
-    BRAIN_STATIC_INFO,
+    COMPANION_STATIC_INFO,
     FRAME_HEAD,
     FRAME_OVERHEAD,
     HANDSHAKE_MSG_MAX,
@@ -28,7 +28,7 @@ from secure_channel import (
     LinkViolation,
     NoiseError,
     SecureChannel,
-    brain_static_key,
+    companion_static_key,
     handshake_frame_size,
     kernel_static_key,
     public_key,
@@ -38,9 +38,9 @@ from secure_channel import (
 pytest.importorskip("cryptography")
 
 PSK = bytes(range(32))
-BRAIN_SK = bytes([0x77]) * 32
+COMPANION_SK = bytes([0x77]) * 32
 E_ROBOT = bytes([0x33]) * 32
-E_BRAIN = bytes([0x44]) * 32
+E_COMPANION = bytes([0x44]) * 32
 
 
 def _pair(
@@ -54,16 +54,16 @@ def _pair(
     robot = SecureChannel(
         robot_psk,
         True,
-        remote_pinned=public_key(BRAIN_SK) if pinned else None,
+        remote_pinned=public_key(COMPANION_SK) if pinned else None,
         clock=clock,
         _testing_eph_priv=E_ROBOT,
     )
     brain = SecureChannel(
         brain_psk,
         False,
-        static_key=BRAIN_SK if pinned else None,
+        static_key=COMPANION_SK if pinned else None,
         clock=clock,
-        _testing_eph_priv=E_BRAIN,
+        _testing_eph_priv=E_COMPANION,
     )
     first = robot.start_handshake()
     brain.begin(first[0])
@@ -94,17 +94,17 @@ def test_both_patterns_establish_and_traffic_flows_both_ways(pinned: bool) -> No
 
 def test_ik_authenticates_the_pinned_static_and_xx_the_derived_one() -> None:
     robot, brain = _pair(True)
-    assert robot.remote_static == public_key(BRAIN_SK)
+    assert robot.remote_static == public_key(COMPANION_SK)
     assert brain.remote_static == public_key(kernel_static_key(PSK))
     robot, brain = _pair(False)
-    assert robot.remote_static == public_key(brain_static_key(PSK))
+    assert robot.remote_static == public_key(companion_static_key(PSK))
     assert brain.remote_static == public_key(kernel_static_key(PSK))
 
 
 def test_a_brain_with_another_link_key_is_refused_by_the_robot_in_xx() -> None:
     other = bytes((b ^ 1) for b in PSK)
     robot = SecureChannel(PSK, True, _testing_eph_priv=E_ROBOT)
-    brain = SecureChannel(other, False, _testing_eph_priv=E_BRAIN)
+    brain = SecureChannel(other, False, _testing_eph_priv=E_COMPANION)
     first = robot.start_handshake()
     brain.begin(first[0])
     msg2 = brain.handle_handshake(first[1:])
@@ -116,8 +116,8 @@ def test_a_brain_with_another_link_key_is_refused_by_the_robot_in_xx() -> None:
 
 def test_a_robot_with_another_link_key_is_refused_by_the_brain_in_ik() -> None:
     other = bytes((b ^ 1) for b in PSK)
-    robot = SecureChannel(other, True, remote_pinned=public_key(BRAIN_SK), _testing_eph_priv=E_ROBOT)
-    brain = SecureChannel(PSK, False, static_key=BRAIN_SK, _testing_eph_priv=E_BRAIN)
+    robot = SecureChannel(other, True, remote_pinned=public_key(COMPANION_SK), _testing_eph_priv=E_ROBOT)
+    brain = SecureChannel(PSK, False, static_key=COMPANION_SK, _testing_eph_priv=E_COMPANION)
     first = robot.start_handshake()
     brain.begin(first[0])
     with pytest.raises(LinkViolation, match="link key derives"):
@@ -127,7 +127,7 @@ def test_a_robot_with_another_link_key_is_refused_by_the_brain_in_ik() -> None:
 
 def test_an_ik_robot_that_pinned_another_key_is_refused_by_the_brain() -> None:
     robot = SecureChannel(PSK, True, remote_pinned=public_key(bytes([0x78]) * 32), _testing_eph_priv=E_ROBOT)
-    brain = SecureChannel(PSK, False, static_key=BRAIN_SK, _testing_eph_priv=E_BRAIN)
+    brain = SecureChannel(PSK, False, static_key=COMPANION_SK, _testing_eph_priv=E_COMPANION)
     first = robot.start_handshake()
     brain.begin(first[0])
     with pytest.raises(LinkViolation, match="handshake"):
@@ -145,9 +145,9 @@ def test_ik_without_a_static_key_and_an_unknown_pattern_are_refused_at_begin() -
 
 def test_the_pattern_byte_is_bound_into_the_transcript() -> None:
     # The same messages with the other pattern's prologue fail the first AEAD.
-    robot = SecureChannel(PSK, True, remote_pinned=public_key(BRAIN_SK), _testing_eph_priv=E_ROBOT)
+    robot = SecureChannel(PSK, True, remote_pinned=public_key(COMPANION_SK), _testing_eph_priv=E_ROBOT)
     first = robot.start_handshake()
-    hs = HandshakeState(PATTERN_IK, False, BRAIN_SK, None, b"azos-brain-link-v1" + bytes([PATTERN_XX]))
+    hs = HandshakeState(PATTERN_IK, False, COMPANION_SK, None, b"azos-companion-link-v2" + bytes([PATTERN_XX]))
     with pytest.raises(NoiseError):
         hs.read_message(first[3:])
 
@@ -160,7 +160,7 @@ def test_handshake_frame_checks() -> None:
         handshake_frame_size(bytes([0xFF, 0xFF]))
     assert HANDSHAKE_MSG_MAX >= 96
     robot = SecureChannel(PSK, True, _testing_eph_priv=E_ROBOT)
-    brain = SecureChannel(PSK, False, _testing_eph_priv=E_BRAIN)
+    brain = SecureChannel(PSK, False, _testing_eph_priv=E_COMPANION)
     first = robot.start_handshake()
     brain.begin(first[0])
     with pytest.raises(LinkViolation):
@@ -179,9 +179,9 @@ def test_a_low_order_ephemeral_is_refused() -> None:
 
 
 def test_keys_derive_per_side_and_purpose() -> None:
-    assert kernel_static_key(PSK) != brain_static_key(PSK) != PSK
+    assert kernel_static_key(PSK) != companion_static_key(PSK) != PSK
     assert kernel_static_key(PSK) != kernel_static_key(bytes((b ^ 1) for b in PSK))
-    assert BRAIN_STATIC_INFO != b""
+    assert COMPANION_STATIC_INFO != b""
 
 
 # ── Transport violations are terminal ────────────────────────────────────────
