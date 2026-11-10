@@ -204,7 +204,7 @@ MAX_PAYLOAD_BYTES = 4 * 1024
 #
 # ── The brain link: a Noise session per connection ───────────────────────────
 #
-# When a link key is configured (`AZOS_BRAIN_LINK_KEY`), the wire frame is
+# When a link key is configured (`AZOS_COMPANION_LINK_KEY`), the wire frame is
 #   Noise( brain_protocol_frame )
 # and there is no other mode: no MAC-only link, no switch to turn it off. The
 # transport's message counter stops in-session replay and a fresh handshake

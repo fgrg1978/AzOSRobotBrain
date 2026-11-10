@@ -19,7 +19,7 @@ trusted LAN. Any peer on the segment can:
 ## Key management
 
 Pre-shared symmetric key (32 bytes raw) loaded from env var
-`AZOS_BRAIN_LINK_KEY` as 64 hex chars (32 bytes); the robot holds the same
+`AZOS_COMPANION_LINK_KEY` as 64 hex chars (32 bytes); the robot holds the same
 bytes in the reserved sector of its disk. Both static Noise keys derive from
 it. If it is missing, `server.py` refuses to start. A different key on the
 two sides fails the handshake and the brain is disconnected.
@@ -49,13 +49,13 @@ def load_link_key() -> Optional[bytes]:
 
     Returns 32 raw bytes, or `None` if no key is configured.
     """
-    hex_key = os.environ.get("AZOS_BRAIN_LINK_KEY", "").strip()
+    hex_key = os.environ.get("AZOS_COMPANION_LINK_KEY", "").strip()
     if not hex_key:
         return None
     try:
         raw = bytes.fromhex(hex_key)
     except ValueError:
-        print("[SECCHAN] ERROR: AZOS_BRAIN_LINK_KEY is not valid hex")
+        print("[SECCHAN] ERROR: AZOS_COMPANION_LINK_KEY is not valid hex")
         return None
     if len(raw) != KEY_BYTES:
         print(f"[SECCHAN] ERROR: link key must be {KEY_BYTES} bytes, got {len(raw)}")

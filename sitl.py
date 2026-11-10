@@ -17,7 +17,7 @@ Two operating styles:
   2. Network (CLI / full brain integration):
         python sitl.py --type wheeled --scenario forward_10m
         # opens TCP to 127.0.0.1:8000, completes the Noise handshake with
-        # AZOS_BRAIN_LINK_KEY (the key the brain runs with), streams sensor frames
+        # AZOS_COMPANION_LINK_KEY (the key the brain runs with), streams sensor frames
 
 Scenario runner:
 

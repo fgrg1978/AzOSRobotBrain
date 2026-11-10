@@ -164,17 +164,17 @@ _SESSION_DURATION_S = 10
 def _armed(key_hex):
     """Arm protocol.py's link state exactly as the CLI does, and tear it down
     so the rest of the suite stays plaintext."""
-    prev = os.environ.get("AZOS_BRAIN_LINK_KEY")
-    os.environ["AZOS_BRAIN_LINK_KEY"] = key_hex
+    prev = os.environ.get("AZOS_COMPANION_LINK_KEY")
+    os.environ["AZOS_COMPANION_LINK_KEY"] = key_hex
     try:
         assert protocol.enable_encrypt_link() is True
         yield
     finally:
         reset_protocol_state()
         if prev is None:
-            os.environ.pop("AZOS_BRAIN_LINK_KEY", None)
+            os.environ.pop("AZOS_COMPANION_LINK_KEY", None)
         else:
-            os.environ["AZOS_BRAIN_LINK_KEY"] = prev
+            os.environ["AZOS_COMPANION_LINK_KEY"] = prev
 
 
 async def _read_actuator(robot, timeout_s):
@@ -415,34 +415,34 @@ def test_plaintext_mode_still_resyncs_and_stays_non_fatal():
 
 
 def test_arm_link_layer_never_downgrades_silently():
-    prev = os.environ.get("AZOS_BRAIN_LINK_KEY")
+    prev = os.environ.get("AZOS_COMPANION_LINK_KEY")
     try:
         # No key → plaintext, no error.
-        os.environ.pop("AZOS_BRAIN_LINK_KEY", None)
+        os.environ.pop("AZOS_COMPANION_LINK_KEY", None)
         assert arm_link_layer(quiet=True, expect_auth_failure=False) is None
         assert protocol.encrypt_link_armed() is False
 
         # Malformed key → hard failure, NOT a quiet fallback to plaintext.
-        os.environ["AZOS_BRAIN_LINK_KEY"] = "not-hex"
+        os.environ["AZOS_COMPANION_LINK_KEY"] = "not-hex"
         assert arm_link_layer(quiet=True, expect_auth_failure=False) == EXIT_AUTH_FAILURE
         assert protocol.encrypt_link_armed() is False
 
         # Negative mode without a key is a misconfiguration, not a pass.
-        os.environ.pop("AZOS_BRAIN_LINK_KEY", None)
+        os.environ.pop("AZOS_COMPANION_LINK_KEY", None)
         assert arm_link_layer(quiet=True, expect_auth_failure=True) == EXIT_AUTH_FAILURE
 
         # Negative mode with a key: arms with a DIFFERENT (corrupted) key.
-        os.environ["AZOS_BRAIN_LINK_KEY"] = _KEY_HEX
+        os.environ["AZOS_COMPANION_LINK_KEY"] = _KEY_HEX
         assert arm_link_layer(quiet=True, expect_auth_failure=True) is None
         assert protocol.encrypt_link_armed() is True
-        assert os.environ["AZOS_BRAIN_LINK_KEY"] != _KEY_HEX
-        assert bytes.fromhex(os.environ["AZOS_BRAIN_LINK_KEY"]) != _KEY
+        assert os.environ["AZOS_COMPANION_LINK_KEY"] != _KEY_HEX
+        assert bytes.fromhex(os.environ["AZOS_COMPANION_LINK_KEY"]) != _KEY
     finally:
         reset_protocol_state()
         if prev is None:
-            os.environ.pop("AZOS_BRAIN_LINK_KEY", None)
+            os.environ.pop("AZOS_COMPANION_LINK_KEY", None)
         else:
-            os.environ["AZOS_BRAIN_LINK_KEY"] = prev
+            os.environ["AZOS_COMPANION_LINK_KEY"] = prev
 
 
 def test_corrupt_key_hex_changes_exactly_one_bit():

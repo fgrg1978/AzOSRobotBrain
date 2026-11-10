@@ -68,7 +68,7 @@ EXIT_NO_CONNECT = 2
 
 # ── RFC-0019 transparent encryption wrappers ──────────────────────────────────
 #
-# When `AZOS_BRAIN_LINK_KEY` is set, the stub becomes the handshake RESPONDER
+# When `AZOS_COMPANION_LINK_KEY` is set, the stub becomes the handshake RESPONDER
 # (the robot dials it) and then wraps the raw asyncio reader/writer so the
 # scenarios below run UNCHANGED on plaintext brain frames. On the wire each
 # frame is Noise( brain_frame ) — matching the kernel pump.

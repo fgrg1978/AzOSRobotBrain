@@ -18,7 +18,7 @@ profile on the way.
   little-endian length, up to 1400 bytes of payload and a CRC-8/MAXIM.
   Packet types and shared limits match the AzOS kernel.
 - **Authenticated, encrypted link.** With a pre-shared key in
-  `AZOS_BRAIN_LINK_KEY`, every connection runs a Noise handshake
+  `AZOS_COMPANION_LINK_KEY`, every connection runs a Noise handshake
   (`Noise_IK` or `Noise_XX`, X25519 / ChaCha20-Poly1305 / SHA-256) whose static
   keys derive from the same secret, then every brain-protocol frame travels as
   one Noise transport message with in-session rekeying. There is no second MAC
@@ -36,7 +36,7 @@ profile on the way.
   it byte for byte against the Rust implementation in AzOS.
 - **No unauthenticated robot link.** The server refuses to start without a
   link key, and the simulated robots (`sitl.py`, `tools/sitl/`) speak the same
-  Noise session with the same `AZOS_BRAIN_LINK_KEY`. The HTTP API refuses to
+  Noise session with the same `AZOS_COMPANION_LINK_KEY`. The HTTP API refuses to
   start without `AZOS_BRAIN_API_KEY` unless `AZOS_BRAIN_ALLOW_INSECURE` is set.
 - **Safety checks independent of the planner.** Each sensor packet goes
   through a safety profile for its robot type (wheeled, drone, humanoid,
@@ -83,7 +83,7 @@ python -m mypy             # strict type check of the modules listed in pyprojec
 Run the server (edit `config.yaml` first: robot type, model endpoint, ports):
 
 ```bash
-export AZOS_BRAIN_LINK_KEY=<64 hex chars: the same 32 bytes as the kernel's LINK.KEY>
+export AZOS_COMPANION_LINK_KEY=<64 hex chars: the same 32 bytes as the kernel's LINK.KEY>
 export AZOS_BRAIN_API_KEY=<token for the HTTP API>
 export AZOS_BRAIN_NOISE_SK=<64 hex chars: the private key whose public half the robot pins; optional>
 python server.py

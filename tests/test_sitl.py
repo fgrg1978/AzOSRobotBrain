@@ -514,9 +514,9 @@ def test_sitl_netclient_refuses_to_dial_without_the_link_key(monkeypatch):
     """No key, no link: the client never opens a plaintext connection."""
     import asyncio as _a
 
-    monkeypatch.delenv("AZOS_BRAIN_LINK_KEY", raising=False)
+    monkeypatch.delenv("AZOS_COMPANION_LINK_KEY", raising=False)
     client = SITLNetClient(SITLRobot(robot_type=ROBOT_WHEELED), host="127.0.0.1", port=1, duration_s=0.1)
-    with pytest.raises(RuntimeError, match="AZOS_BRAIN_LINK_KEY"):
+    with pytest.raises(RuntimeError, match="AZOS_COMPANION_LINK_KEY"):
         _a.run(client.run())
 
 

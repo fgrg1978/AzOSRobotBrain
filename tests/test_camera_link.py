@@ -39,12 +39,12 @@ def _reset_protocol_state():
 
 
 def _arm(monkeypatch):
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", HEXKEY)
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", HEXKEY)
     assert protocol.enable_encrypt_link() is True
 
 
 def _unarmed(monkeypatch):
-    monkeypatch.delenv("AZOS_BRAIN_LINK_KEY", raising=False)
+    monkeypatch.delenv("AZOS_COMPANION_LINK_KEY", raising=False)
     assert protocol.enable_encrypt_link() is False
 
 

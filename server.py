@@ -170,7 +170,7 @@ LINK_READ_TIMEOUT_S: float = 30.0
 # ── Actuation-link bind address ──────────────────────────────────────────────
 
 #: The robot link listens on every interface: real robots are remote, and the
-#: Noise handshake (keyed by `AZOS_BRAIN_LINK_KEY`) is what admits a peer.
+#: Noise handshake (keyed by `AZOS_COMPANION_LINK_KEY`) is what admits a peer.
 LINK_BIND_ANY: str = "0.0.0.0"
 
 
@@ -1509,12 +1509,12 @@ class BrainServer:
         if not protocol.enable_encrypt_link():
             raise RuntimeError(
                 "[BRAIN] Cannot start: the robot link needs a key. Set "
-                "AZOS_BRAIN_LINK_KEY to the shared secret provisioned as the "
+                "AZOS_COMPANION_LINK_KEY to the shared secret provisioned as the "
                 "kernel's link key (64 hex digits)."
             )
         print(
             "[BRAIN] secure_channel: Noise session per connection "
-            "(AZOS_BRAIN_LINK_KEY; handshake required)"
+            "(AZOS_COMPANION_LINK_KEY; handshake required)"
         )
         bind_host = LINK_BIND_ANY
         server = await asyncio.start_server(self.handle_robot, bind_host, port)

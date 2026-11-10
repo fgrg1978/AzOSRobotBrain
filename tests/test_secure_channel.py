@@ -13,19 +13,19 @@ from secure_channel import load_link_key
 
 
 def test_load_link_key_missing_returns_none(monkeypatch):
-    monkeypatch.delenv("AZOS_BRAIN_LINK_KEY", raising=False)
+    monkeypatch.delenv("AZOS_COMPANION_LINK_KEY", raising=False)
     assert load_link_key() is None
 
 
 def test_load_link_key_invalid_hex_returns_none(monkeypatch, capsys):
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", "zz")
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", "zz")
     assert load_link_key() is None
     out = capsys.readouterr().out
     assert "not valid hex" in out
 
 
 def test_load_link_key_wrong_length_returns_none(monkeypatch, capsys):
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", "00" * 31)
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", "00" * 31)
     assert load_link_key() is None
     out = capsys.readouterr().out
     assert "must be" in out
@@ -33,7 +33,7 @@ def test_load_link_key_wrong_length_returns_none(monkeypatch, capsys):
 
 def test_load_link_key_valid_32_bytes(monkeypatch):
     hex32 = "00" * 32
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", hex32)
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", hex32)
     key = load_link_key()
     assert key is not None
     assert len(key) == 32

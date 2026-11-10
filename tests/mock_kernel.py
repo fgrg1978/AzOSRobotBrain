@@ -18,7 +18,7 @@ import protocol
 from robot_link import RobotLink
 
 PSK = bytes(range(32))  # 32-byte test key
-HEXKEY = PSK.hex()  # 64 hex chars for AZOS_BRAIN_LINK_KEY
+HEXKEY = PSK.hex()  # 64 hex chars for AZOS_COMPANION_LINK_KEY
 
 
 class MockRobot(RobotLink):
@@ -38,7 +38,7 @@ class MockRobot(RobotLink):
 
 def arm_brain(monkeypatch) -> None:  # type: ignore[no-untyped-def]
     """Arm the brain's encrypted link from the env."""
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", HEXKEY)
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", HEXKEY)
     assert protocol.enable_encrypt_link() is True
 
 

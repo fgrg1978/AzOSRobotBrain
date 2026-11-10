@@ -45,13 +45,13 @@ def _reset_protocol_state():
 
 def test_enable_off_without_a_key(monkeypatch):
     # No key: nothing to arm, and `server.py` refuses to run.
-    monkeypatch.delenv("AZOS_BRAIN_LINK_KEY", raising=False)
+    monkeypatch.delenv("AZOS_COMPANION_LINK_KEY", raising=False)
     assert protocol.enable_encrypt_link() is False
     assert protocol.encrypt_link_armed() is False
 
 
 def test_enable_arms_with_a_key_and_there_is_no_switch_to_turn_it_off(monkeypatch):
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", HEXKEY)
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", HEXKEY)
     # The old HMAC-only / off switch is gone: setting it changes nothing.
     monkeypatch.setenv("AZOS_BRAIN_ENCRYPT_LINK", "0")
     assert protocol.enable_encrypt_link() is True
@@ -59,7 +59,7 @@ def test_enable_arms_with_a_key_and_there_is_no_switch_to_turn_it_off(monkeypatc
 
 
 def test_enable_refuses_a_malformed_noise_key(monkeypatch):
-    monkeypatch.setenv("AZOS_BRAIN_LINK_KEY", HEXKEY)
+    monkeypatch.setenv("AZOS_COMPANION_LINK_KEY", HEXKEY)
     monkeypatch.setenv("AZOS_BRAIN_NOISE_SK", "zz")
     with pytest.raises(ValueError, match="AZOS_BRAIN_NOISE_SK"):
         protocol.enable_encrypt_link()
@@ -578,9 +578,9 @@ def test_the_brain_refuses_to_start_without_the_link_key(monkeypatch):
     opt-in then lets `run()` past the check and it tries to bind."""
     from server import BrainServer
 
-    monkeypatch.delenv("AZOS_BRAIN_LINK_KEY", raising=False)
+    monkeypatch.delenv("AZOS_COMPANION_LINK_KEY", raising=False)
     monkeypatch.setenv("AZOS_BRAIN_ALLOW_INSECURE_LINK", "1")
     srv = BrainServer.__new__(BrainServer)
     srv.config = {"robot": {"listen_port": 0}}
-    with pytest.raises(RuntimeError, match="AZOS_BRAIN_LINK_KEY"):
+    with pytest.raises(RuntimeError, match="AZOS_COMPANION_LINK_KEY"):
         asyncio.run(srv.run())

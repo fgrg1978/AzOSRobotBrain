@@ -30,7 +30,7 @@ The link (RFC-0019)
 -------------------
 
 The kernel's brain link is always a Noise session, so the stub speaks it
-whenever `AZOS_BRAIN_LINK_KEY` is exported: it arms the encrypted link exactly
+whenever `AZOS_COMPANION_LINK_KEY` is exported: it arms the encrypted link exactly
 like `server.py` does (`protocol.enable_encrypt_link()`), runs the responder
 handshake on the accepted connection and reads every packet through
 `protocol.read_packet`. A configured key that fails to arm is a hard error,
@@ -58,7 +58,7 @@ Usage:
     python3 tools/stub_brain.py --duration-s 20 --quiet | tee brain.log
 
     # Authenticated link (the kernel needs the same link key):
-    export AZOS_BRAIN_LINK_KEY=$(xxd -p -c64 build/LINK.KEY)
+    export AZOS_COMPANION_LINK_KEY=$(xxd -p -c64 build/LINK.KEY)
     python3 tools/stub_brain.py --duration-s 20
 
     # NEGATIVE gate — proves the handshake actually rejects:
@@ -436,7 +436,7 @@ class StubBrain:
             self.quiet,
             "[STUB] link: Noise session per connection (handshake required)"
             if self.encrypted
-            else "[STUB] link: PLAINTEXT (no AZOS_BRAIN_LINK_KEY; development only)",
+            else "[STUB] link: PLAINTEXT (no AZOS_COMPANION_LINK_KEY; development only)",
         )
         self.connected = True
         self.start_t = time.time()
@@ -534,12 +534,12 @@ def arm_link_layer(quiet: bool, expect_auth_failure: bool) -> Optional[int]:
     Returns None on success, or an exit code on a fatal misconfiguration.
     Never downgrades silently: if a key is configured it MUST arm.
     """
-    key_hex = os.environ.get("AZOS_BRAIN_LINK_KEY", "").strip()
+    key_hex = os.environ.get("AZOS_COMPANION_LINK_KEY", "").strip()
 
     if expect_auth_failure:
         if not key_hex:
             print(
-                "[STUB] FATAL: --expect-auth-failure needs AZOS_BRAIN_LINK_KEY set "
+                "[STUB] FATAL: --expect-auth-failure needs AZOS_COMPANION_LINK_KEY set "
                 "(it corrupts that key on purpose); with no key there is no "
                 "handshake to reject anything",
                 flush=True,
@@ -550,7 +550,7 @@ def arm_link_layer(quiet: bool, expect_auth_failure: bool) -> Optional[int]:
         except ValueError as e:
             print(f"[STUB] FATAL: --expect-auth-failure: {e}", flush=True)
             return EXIT_AUTH_FAILURE
-        os.environ["AZOS_BRAIN_LINK_KEY"] = key_hex
+        os.environ["AZOS_COMPANION_LINK_KEY"] = key_hex
         print(
             "[STUB] --expect-auth-failure: link key deliberately CORRUPTED "
             "(last byte bit-flipped) — NOTHING must verify; exit 0 only if "
@@ -559,20 +559,20 @@ def arm_link_layer(quiet: bool, expect_auth_failure: bool) -> Optional[int]:
         )
 
     if not key_hex:
-        log(quiet, "[STUB] link: PLAINTEXT (AZOS_BRAIN_LINK_KEY unset)")
+        log(quiet, "[STUB] link: PLAINTEXT (AZOS_COMPANION_LINK_KEY unset)")
         return None
 
     if not protocol.enable_encrypt_link():
         # Loud even under --quiet: a configured key that fails to load is
         # a security regression, not a log-level decision.
         print(
-            "[STUB] FATAL: AZOS_BRAIN_LINK_KEY is set but the encrypted link "
+            "[STUB] FATAL: AZOS_COMPANION_LINK_KEY is set but the encrypted link "
             "refused to arm (bad hex or wrong length) — refusing to run "
             "unauthenticated",
             flush=True,
         )
         return EXIT_AUTH_FAILURE
-    log(quiet, "[STUB] link: Noise session ARMED from AZOS_BRAIN_LINK_KEY")
+    log(quiet, "[STUB] link: Noise session ARMED from AZOS_COMPANION_LINK_KEY")
     return None
 
 
@@ -629,7 +629,7 @@ def main() -> int:
     ap.add_argument(
         "--expect-auth-failure",
         action="store_true",
-        help="NEGATIVE gate: corrupt AZOS_BRAIN_LINK_KEY on purpose and "
+        help="NEGATIVE gate: corrupt AZOS_COMPANION_LINK_KEY on purpose and "
         "exit 0 only if nothing verifies (proves the handshake rejects)",
     )
     ap.add_argument("--quiet", action="store_true")

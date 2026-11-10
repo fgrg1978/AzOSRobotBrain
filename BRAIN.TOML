@@ -76,10 +76,10 @@ heartbeat_period_s = 5
 [security]
 # Environment variable names that hold the shared secrets.
 # NEVER store secret values here — use env vars only.
-# AZOS_BRAIN_LINK_KEY: the 32-byte pre-shared key the brain↔kernel Noise
+# AZOS_COMPANION_LINK_KEY: the 32-byte pre-shared key the brain↔kernel Noise
 #                      static keys derive from.
 # AZOS_BRAIN_API_KEY:  Bearer token for the HTTP REST API.
 # AZOS_BRAIN_NOISE_SK: optional brain static private key (Noise_IK); read from
 #                      the environment only, like the two above.
-link_key_env = "AZOS_BRAIN_LINK_KEY"
+link_key_env = "AZOS_COMPANION_LINK_KEY"
 api_key_env  = "AZOS_BRAIN_API_KEY"

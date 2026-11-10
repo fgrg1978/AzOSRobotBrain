@@ -45,11 +45,11 @@ class RobotLink:
     @classmethod
     async def connect(cls, host: str, port: int) -> "RobotLink":
         """Dial the brain and complete the handshake with the link key from
-        `AZOS_BRAIN_LINK_KEY` (the key the brain was started with)."""
+        `AZOS_COMPANION_LINK_KEY` (the key the brain was started with)."""
         psk = load_link_key()
         if psk is None:
             raise RuntimeError(
-                "AZOS_BRAIN_LINK_KEY is not set: the brain link is always a "
+                "AZOS_COMPANION_LINK_KEY is not set: the brain link is always a "
                 "Noise session, set the same 64-hex-digit key the brain runs with"
             )
         reader, writer = await asyncio.open_connection(host, port)
